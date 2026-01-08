@@ -1,9 +1,16 @@
+<!-- 
+    PROJECT: CỔNG TRA CỨU QUY CHẾ SINH VIÊN - ĐẠI HỌC PHENIKAA
+    Author: Văn phòng trường - Khối Kỹ thuật
+    Last Updated: 2026
+    Description: Single Page Application tra cứu quy chế Đào tạo, Rèn luyện, Ngoại khóa.
+-->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cổng hỗ trợ tìm hiểu quy chế - Đại học Phenikaa (V6)</title>
+    <meta name="description" content="Cổng tra cứu Quy chế Đào tạo, Điểm rèn luyện, Ngoại khóa dành cho Sinh viên Đại học Phenikaa - Khối Kỹ thuật.">
+    <title>Tra Cứu Quy Chế Sinh Viên - Đại học Phenikaa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -32,20 +39,31 @@
         .source-tag { font-size: 10px; background-color: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-left: 8px; vertical-align: middle; font-weight: normal; }
         /* Tagline nổi bật ở dashboard */
         .highlight-tag { font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 4px; display: block; }
+        /* Scrollbar custom */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f1f1; }
+        ::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
     </style>
 </head>
 <body class="text-gray-800 text-sm h-screen flex flex-col">
 
-    <!-- Header (Giữ nguyên) -->
+    <!-- Header -->
     <header class="bg-phenikaa-primary text-white shadow-lg sticky top-0 z-50 flex-none">
         <div class="container mx-auto px-4 py-3">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                 <div class="flex items-center w-full md:w-auto">
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-phenikaa-primary font-bold text-lg mr-3 shadow">P</div>
+                    <!-- Logo -->
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-phenikaa-primary font-bold text-lg mr-3 shadow-md shrink-0">P</div>
                     <div>
-                        <h1 class="text-lg font-bold uppercase leading-tight">Quy Chế - Quy Định nổi bật Đại học Phenikaa</h1>
-                        <p class="text-xs opacity-90">QLL - Văn phòng trường Kỹ thuật tổng hợp</p>
+                        <h1 class="text-lg font-bold uppercase leading-tight">Quy Chế - Quy Định Phenikaa</h1>
+                        <p class="text-xs opacity-90">Văn phòng trường - Khối Kỹ thuật (Cơ khí & Điện)</p>
                     </div>
+                </div>
+                <!-- Search Bar -->
+                <div class="relative w-full md:w-80">
+                    <input type="text" id="searchInput" onkeyup="filterContent()" placeholder="Tìm kiếm: học lại, kỷ luật, song bằng..." class="w-full pl-9 pr-4 py-2 rounded border-0 text-gray-800 text-sm focus:ring-2 focus:ring-phenikaa-secondary shadow-inner transition-shadow">
+                    <i class="fas fa-search absolute left-3 top-2.5 text-gray-400"></i>
                 </div>
             </div>
         </div>
@@ -56,37 +74,37 @@
         
         <!-- Dashboard Thông Số Quan Trọng -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <!-- Box 1 -->
+            <!-- Box 1: ĐRL -->
             <div class="bg-white p-4 rounded card-shadow border-l-4 border-blue-600 relative overflow-hidden group hover:bg-blue-50 transition-colors">
                 <span class="highlight-tag text-blue-500"><i class="fas fa-bullseye mr-1"></i>Định mức tối đa</span>
                 <div class="text-gray-600 text-xs font-bold uppercase">Điểm Rèn Luyện</div>
                 <div class="text-2xl font-bold text-blue-700">100đ</div>
-                <div class="text-xs text-gray-500 mt-1">Đánh giá theo từng kỳ</div>
-                <i class="fas fa-star absolute bottom-2 right-2 text-blue-100 text-4xl -z-0"></i>
+                <div class="text-xs text-gray-500 mt-1">Đánh giá từng kỳ</div>
+                <i class="fas fa-star absolute bottom-2 right-2 text-blue-100 text-4xl -z-0 opacity-50"></i>
             </div>
-            <!-- Box 2 -->
+            <!-- Box 2: Ngoại khóa -->
             <div class="bg-white p-4 rounded card-shadow border-l-4 border-green-600 relative overflow-hidden group hover:bg-green-50 transition-colors">
                 <span class="highlight-tag text-green-600"><i class="fas fa-seedling mr-1"></i>Chỉ tiêu năm học</span>
                 <div class="text-gray-600 text-xs font-bold uppercase">Ngoại Khóa</div>
                 <div class="text-2xl font-bold text-green-700">105đ</div>
                 <div class="text-xs text-gray-500 mt-1">Tổng 03 học kỳ chính</div>
-                <i class="fas fa-running absolute bottom-2 right-2 text-green-100 text-4xl -z-0"></i>
+                <i class="fas fa-running absolute bottom-2 right-2 text-green-100 text-4xl -z-0 opacity-50"></i>
             </div>
-            <!-- Box 3 -->
+            <!-- Box 3: Cảnh báo -->
             <div class="bg-white p-4 rounded card-shadow border-l-4 border-yellow-500 relative overflow-hidden group hover:bg-yellow-50 transition-colors">
                 <span class="highlight-tag text-yellow-600"><i class="fas fa-exclamation-circle mr-1"></i>Ngưỡng báo động</span>
                 <div class="text-gray-600 text-xs font-bold uppercase">Cảnh Báo HV</div>
                 <div class="text-2xl font-bold text-yellow-600">&lt; 1.0 GPA</div>
                 <div class="text-xs text-gray-500 mt-1">Đối với kỳ thường</div>
-                <i class="fas fa-exclamation-triangle absolute bottom-2 right-2 text-yellow-100 text-4xl -z-0"></i>
+                <i class="fas fa-exclamation-triangle absolute bottom-2 right-2 text-yellow-100 text-4xl -z-0 opacity-50"></i>
             </div>
-            <!-- Box 4 -->
+            <!-- Box 4: Thôi học -->
             <div class="bg-white p-4 rounded card-shadow border-l-4 border-red-500 relative overflow-hidden group hover:bg-red-50 transition-colors">
                 <span class="highlight-tag text-red-600"><i class="fas fa-ban mr-1"></i>Giới hạn đỏ</span>
                 <div class="text-gray-600 text-xs font-bold uppercase">Buộc Thôi Học</div>
                 <div class="text-2xl font-bold text-red-600">02 Lần</div>
                 <div class="text-xs text-gray-500 mt-1">Cảnh báo liên tiếp</div>
-                <i class="fas fa-user-times absolute bottom-2 right-2 text-red-100 text-4xl -z-0"></i>
+                <i class="fas fa-user-times absolute bottom-2 right-2 text-red-100 text-4xl -z-0 opacity-50"></i>
             </div>
         </div>
 
@@ -120,7 +138,7 @@
                             <span>Khối lượng Min/Kỳ:</span> <span class="font-bold text-gray-800">08 TC</span>
                         </div>
                         <div class="flex justify-between text-sm bg-gray-50 p-2 rounded">
-                            <span>Khối lượng Max/Kỳ:</span> <span class="font-bold text-gray-800">16 TC (thường)</span>
+                            <span>Khối lượng Max/Kỳ:</span> <span class="font-bold text-gray-800">16 TC (kỳ thường)</span>
                         </div>
                         <div class="bg-yellow-50 p-3 rounded border border-yellow-200 text-xs">
                             <strong class="text-yellow-800 uppercase block mb-1"><i class="fas fa-wallet mr-1"></i>Chế tài Rút học phần (Hủy môn):</strong>
@@ -144,15 +162,18 @@
                             <p class="font-bold mb-1 text-gray-700">A. Ngưỡng Cảnh báo Học tập (CBHT):</p>
                             <div class="grid grid-cols-2 gap-2">
                                 <div class="bg-red-50 p-2 rounded text-center">
-                                    <div class="text-gray-500">ĐTB Kỳ 1 (Đầu khóa)</div>
+                                    <div class="text-gray-500">GPA Kỳ 1 (Đầu khóa)</div>
                                     <div class="font-bold text-red-600 text-lg">&lt; 0.8</div>
                                 </div>
                                 <div class="bg-red-50 p-2 rounded text-center">
-                                    <div class="text-gray-500">ĐTB Kỳ tiếp theo</div>
+                                    <div class="text-gray-500">GPA Kỳ tiếp theo</div>
                                     <div class="font-bold text-red-600 text-lg">&lt; 1.0</div>
                                 </div>
                             </div>
-                            <div class="mt-2 grid grid-cols-4 gap-1 text-center">
+                            <div class="mt-2 text-center text-gray-600 font-semibold bg-gray-100 p-1 rounded">
+                                GPA Tích lũy dưới chuẩn:
+                            </div>
+                            <div class="mt-1 grid grid-cols-4 gap-1 text-center">
                                 <div class="bg-gray-100 p-1 rounded">
                                     <div class="text-[9px]">Năm 1</div>
                                     <div class="font-bold text-red-600">&lt; 1.2</div>
@@ -217,9 +238,9 @@
                             <p class="font-bold text-gray-700 mb-1"><i class="fas fa-chart-line mr-1"></i>Xác định Trình độ năm học <span class="source-tag">Điều 20</span>:</p>
                             <p class="text-gray-500 italic mb-1">Căn cứ số TC tích lũy (N) và số TC trung bình năm (M):</p>
                             <div class="grid grid-cols-3 gap-2 text-center bg-gray-50 p-2 rounded">
-                                <div>Năm 1: N < M</div>
-                                <div>Năm 2: N < 2M</div>
-                                <div>Năm 3: N < 3M</div>
+                                <div>Năm 1:<br> <strong>N &lt; M</strong></div>
+                                <div>Năm 2:<br> <strong>M &le; N &lt; 2M</strong></div>
+                                <div>Năm 3:<br> <strong>2M &le; N &lt; 3M</strong></div>
                             </div>
                         </div>
                         <div class="border-t pt-2">
@@ -481,7 +502,8 @@
                             <p class="text-3xl font-bold text-yellow-700">105đ</p>
                             <p class="text-[10px] text-yellow-600 mt-1 italic leading-tight">
                                 <i class="fas fa-check-circle"></i> Chỉ tiêu tính cho 03 học kỳ chính/năm.<br>
-                                35đ/kỳ x 3 kỳ = 105đ.
+                                35đ/kỳ x 3 kỳ = 105đ.<br>
+                                <span class="font-bold text-red-500">(Chưa bao gồm kỳ phụ/hè)</span>
                             </p>
                         </div>
                         <div class="p-3 bg-blue-50 rounded border border-blue-200">
@@ -550,7 +572,7 @@
 
     </main>
 
-    <!-- Footer (Giữ nguyên) -->
+    <!-- Footer -->
     <footer class="bg-gray-800 text-white py-6 mt-8 text-xs flex-none">
         <div class="container mx-auto px-4 text-center">
             <p class="font-bold uppercase text-gray-400 mb-1">Tổng hợp bởi Hiếu Đoàn - Văn phòng trường Kỹ thuật</p>
