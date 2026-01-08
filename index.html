@@ -1,6 +1,6 @@
 <!-- 
     PROJECT: CÔNG CỤ HỖ TRỢ TÌM HIỂU QUY CHẾ - ĐẠI HỌC PHENIKAA
-    Author: Văn phòng trường Kỹ thuật
+    Author: Văn phòng Trường Kỹ thuật Phenikaa
     Last Updated: 2026
     Description: Single Page Application tra cứu quy chế Đào tạo, Rèn luyện, Ngoại khóa với giao diện hiện đại & tương tác.
 -->
@@ -9,8 +9,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Công cụ hỗ trợ tìm hiểu Quy chế Đào tạo, Điểm rèn luyện, Ngoại khóa dành cho Sinh viên Đại học Phenikaa">
-    <title>Cổng hỗ trợ tìm hiểu quy chế - Đại học Phenikaa</title>
+    <meta name="description" content="Công cụ hỗ trợ tìm hiểu Quy chế Đào tạo, Điểm rèn luyện, Ngoại khóa dành cho Sinh viên Đại học Phenikaa - Trường Kỹ thuật.">
+    <title>Công cụ hỗ trợ tìm hiểu quy chế - Đại học Phenikaa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- Google Fonts: Inter cho nét hiện đại, trang trọng -->
@@ -116,14 +116,10 @@
                     <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-phenikaa-primary font-bold text-lg mr-3 shadow-md shrink-0 transition-transform duration-500 group-hover:rotate-12">P</div>
                     <div>
                         <h1 class="text-lg font-bold uppercase leading-tight tracking-wide">Công cụ hỗ trợ tìm hiểu quy chế</h1>
-                        <p class="text-xs opacity-80 group-hover:opacity-100 transition-opacity">Văn phòng trường - Khối Kỹ thuật (Cơ khí & Điện)</p>
+                        <p class="text-xs opacity-80 group-hover:opacity-100 transition-opacity">Văn phòng Trường Kỹ thuật Phenikaa</p>
                     </div>
                 </div>
-                <!-- Search Bar -->
-                <div class="relative w-full md:w-96 group">
-                    <input type="text" id="searchInput" onkeyup="filterContent()" placeholder="Gõ từ khóa: học lại, kỷ luật, song bằng..." class="w-full pl-10 pr-4 py-2 rounded-full border-2 border-transparent bg-white/10 text-white placeholder-white/60 focus:bg-white focus:text-slate-800 focus:border-phenikaa-secondary focus:outline-none transition-all duration-300 shadow-inner">
-                    <i class="fas fa-search absolute left-3.5 top-3 text-white/60 group-focus-within:text-phenikaa-primary transition-colors"></i>
-                </div>
+                <!-- Search Bar Removed as requested -->
             </div>
         </div>
     </header>
@@ -549,7 +545,7 @@
                 </div>
 
                 <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-100 text-xs flex items-start">
-                    <i class="fa-light fa-triangle-exclamation"></i>>
+                    <i class="fas fa-skull-crossbones text-red-500 text-lg mr-3 mt-0.5"></i>
                     <div>
                         <strong class="text-red-700 uppercase block mb-1">Hệ quả ĐRL Thấp (Điều 11):</strong>
                         <ul class="space-y-1 text-red-600 pl-1">
@@ -655,8 +651,13 @@
     <!-- Footer -->
     <footer class="bg-slate-800 text-white py-4 mt-auto text-xs flex-none border-t border-slate-700">
         <div class="container mx-auto px-4 text-center">
-            <p class="font-bold uppercase text-slate-300 mb-1 tracking-wide">Tổng hợp bởi Văn phòng Trường Kỹ thuật</p>
-            <p class="text-slate-500 italic max-w-2xl mx-auto">Nội dung được trích dẫn từ Quy định, Quy chế, do đó sinh viên cần đọc đầy đủ toàn văn các văn bản gốc để nắm thông tin trọn vẹn.</p>
+            <div class="flex flex-col md:flex-row justify-center items-center gap-2">
+                <span class="font-bold uppercase text-slate-300 tracking-wide">Tổng hợp bởi Văn phòng Trường Kỹ thuật Phenikaa</span>
+                <span class="hidden md:inline text-slate-600">|</span>
+                <span class="text-slate-400">Tài liệu tra cứu nhanh dành cho CBQLL và Sinh viên.</span>
+                <span class="hidden md:inline text-slate-600">|</span>
+                <span class="text-slate-500 italic">Nội dung trích dẫn từ Quy định gốc. Sinh viên cần đọc toàn văn để nắm thông tin trọn vẹn.</span>
+            </div>
         </div>
     </footer>
 
@@ -691,43 +692,7 @@
             activeBtn.classList.remove("text-slate-500");
         }
 
-        function filterContent() {
-            var filter = document.getElementById('searchInput').value.toUpperCase();
-            var searchableItems = document.getElementsByClassName('searchable-item');
-            
-            if (filter === "") {
-                // If search is cleared, reset to default view (only show active tab)
-                var activeBtn = document.querySelector(".tab-btn.tab-active");
-                if(activeBtn) {
-                    var activeTabId = activeBtn.id.replace("btn-", "tab-");
-                    // Hide all first
-                    var contents = document.getElementsByClassName("tab-content");
-                    for (var i = 0; i < contents.length; i++) {
-                        contents[i].style.display = "none";
-                    }
-                    // Show active
-                    document.getElementById(activeTabId).style.display = "block";
-                }
-                return;
-            }
-
-            // Show all tabs content container to search everywhere
-            var contents = document.getElementsByClassName("tab-content");
-            for (var i = 0; i < contents.length; i++) {
-                contents[i].style.display = "block"; 
-            }
-
-            for (var i = 0; i < searchableItems.length; i++) {
-                var text = searchableItems[i].textContent || searchableItems[i].innerText;
-                if (text.toUpperCase().indexOf(filter) > -1) {
-                    searchableItems[i].style.display = "";
-                    searchableItems[i].classList.add("animate-fade-in");
-                } else {
-                    searchableItems[i].style.display = "none";
-                    searchableItems[i].classList.remove("animate-fade-in");
-                }
-            }
-        }
+        // Search functionality removed as requested
     </script>
 </body>
 </html>
