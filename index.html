@@ -1,21 +1,56 @@
+<!-- 
+    PROJECT: CÔNG CỤ HỖ TRỢ TÌM HIỂU QUY CHẾ - ĐẠI HỌC PHENIKAA
+    Author: Văn phòng trường - Khối Kỹ thuật
+    Last Updated: 2026
+    Description: Single Page Application tra cứu quy chế Đào tạo, Rèn luyện, Ngoại khóa với giao diện hiện đại & tương tác.
+-->
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cổng hỗ trợ tìm hiểu quy chế - Đại học Phenikaa (V6)</title>
+    <meta name="description" content="Công cụ hỗ trợ tìm hiểu Quy chế Đào tạo, Điểm rèn luyện, Ngoại khóa dành cho Sinh viên Đại học Phenikaa - Khối Kỹ thuật.">
+    <title>Cổng hỗ trợ tìm hiểu quy chế - Đại học Phenikaa</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Google Fonts: Inter cho nét hiện đại, trang trọng -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
                     colors: {
                         phenikaa: {
                             primary: '#005a8b', 
+                            light: '#0072b1',
+                            dark: '#004266',
                             secondary: '#00a3e0',
                             accent: '#f39c12',
-                            danger: '#e74c3c'
+                            danger: '#e74c3c',
+                            success: '#27ae60',
+                            warning: '#f1c40f'
+                        }
+                    },
+                    boxShadow: {
+                        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03)',
+                        'hover': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)',
+                        'glow': '0 0 15px rgba(0, 90, 139, 0.15)'
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.3s ease-out forwards',
+                        'slide-up': 'slideUp 0.4s ease-out forwards',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' },
+                        },
+                        slideUp: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
                         }
                     }
                 }
@@ -23,211 +58,268 @@
         }
     </script>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; }
-        .tab-active { border-bottom: 3px solid #005a8b; color: #005a8b; font-weight: bold; background-color: #eef6fc; }
+        body { background-color: #f8fafc; } /* Màu nền xám xanh rất nhạt, dịu mắt */
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Tab Styles */
+        .tab-btn { position: relative; transition: all 0.3s ease; }
+        .tab-btn::after {
+            content: ''; position: absolute; bottom: 0; left: 0; width: 0; height: 3px;
+            background-color: #005a8b; transition: width 0.3s ease;
+        }
+        .tab-btn:hover { color: #005a8b; background-color: #f0f9ff; }
+        .tab-btn:hover::after { width: 100%; }
+        .tab-active { color: #005a8b; font-weight: 600; background-color: #e0f2fe; }
+        .tab-active::after { width: 100%; }
+
+        /* Card Hover Effects */
+        .hover-card { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
+        .hover-card:hover { transform: translateY(-4px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1); }
+
+        /* Tooltip Styles */
+        .tooltip { position: relative; cursor: help; border-bottom: 1px dashed #94a3b8; }
+        .tooltip:hover::before {
+            content: attr(data-tip);
+            position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            padding: 6px 10px; background-color: #334155; color: white;
+            font-size: 11px; border-radius: 4px; white-space: nowrap;
+            z-index: 50; margin-bottom: 5px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .tooltip:hover::after {
+            content: ''; position: absolute; bottom: 100%; left: 50%; transform: translateX(-50%);
+            border-width: 5px; border-style: solid;
+            border-color: #334155 transparent transparent transparent;
+            margin-bottom: -5px;
+        }
+
         .hidden-content { display: none; }
-        .searchable-item { transition: all 0.3s ease; }
-        .card-shadow { box-shadow: 0 1px 3px rgba(0,0,0,0.1); border: 1px solid #e5e7eb; }
-        /* Badge trích dẫn nguồn */
-        .source-tag { font-size: 10px; background-color: #e2e8f0; color: #475569; padding: 2px 6px; border-radius: 4px; display: inline-block; margin-left: 8px; vertical-align: middle; font-weight: normal; }
-        /* Tagline nổi bật ở dashboard */
-        .highlight-tag { font-size: 10px; text-transform: uppercase; font-weight: 800; letter-spacing: 0.05em; margin-bottom: 4px; display: block; }
+        .source-tag { 
+            font-size: 10px; background-color: #f1f5f9; color: #64748b; 
+            padding: 2px 8px; border-radius: 12px; display: inline-flex; 
+            align-items: center; border: 1px solid #e2e8f0; margin-left: 8px;
+        }
     </style>
 </head>
-<body class="text-gray-800 text-sm h-screen flex flex-col">
+<body class="text-slate-700 text-sm h-screen flex flex-col font-sans">
 
-    <!-- Header (Giữ nguyên) -->
-    <header class="bg-phenikaa-primary text-white shadow-lg sticky top-0 z-50 flex-none">
+    <!-- Header -->
+    <header class="bg-gradient-to-r from-phenikaa-primary to-phenikaa-dark text-white shadow-lg sticky top-0 z-50 flex-none">
         <div class="container mx-auto px-4 py-3">
             <div class="flex flex-col md:flex-row justify-between items-center gap-4">
-                <div class="flex items-center w-full md:w-auto">
-                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-phenikaa-primary font-bold text-lg mr-3 shadow">P</div>
+                <div class="flex items-center w-full md:w-auto group">
+                    <!-- Logo với hiệu ứng xoay nhẹ khi hover -->
+                    <div class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-phenikaa-primary font-bold text-lg mr-3 shadow-md shrink-0 transition-transform duration-500 group-hover:rotate-12">P</div>
                     <div>
-                        <h1 class="text-lg font-bold uppercase leading-tight">Quy Chế - Quy Định nổi bật Đại học Phenikaa</h1>
-                        <p class="text-xs opacity-90">QLL - Văn phòng trường Kỹ thuật tổng hợp</p>
+                        <h1 class="text-lg font-bold uppercase leading-tight tracking-wide">Công cụ hỗ trợ tìm hiểu quy chế</h1>
+                        <p class="text-xs opacity-80 group-hover:opacity-100 transition-opacity">Văn phòng trường - Khối Kỹ thuật (Cơ khí & Điện)</p>
                     </div>
+                </div>
+                <!-- Search Bar -->
+                <div class="relative w-full md:w-96 group">
+                    <input type="text" id="searchInput" onkeyup="filterContent()" placeholder="Gõ từ khóa: học lại, kỷ luật, song bằng..." class="w-full pl-10 pr-4 py-2 rounded-full border-2 border-transparent bg-white/10 text-white placeholder-white/60 focus:bg-white focus:text-slate-800 focus:border-phenikaa-secondary focus:outline-none transition-all duration-300 shadow-inner">
+                    <i class="fas fa-search absolute left-3.5 top-3 text-white/60 group-focus-within:text-phenikaa-primary transition-colors"></i>
                 </div>
             </div>
         </div>
     </header>
 
     <!-- Main Content -->
-    <main class="container mx-auto px-4 py-6 max-w-6xl flex-grow overflow-y-auto">
+    <main class="container mx-auto px-4 py-6 max-w-6xl flex-grow overflow-y-auto custom-scrollbar">
         
         <!-- Dashboard Thông Số Quan Trọng -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-            <!-- Box 1 -->
-            <div class="bg-white p-4 rounded card-shadow border-l-4 border-blue-600 relative overflow-hidden group hover:bg-blue-50 transition-colors">
-                <span class="highlight-tag text-blue-500"><i class="fas fa-bullseye mr-1"></i>Định mức tối đa</span>
-                <div class="text-gray-600 text-xs font-bold uppercase">Điểm Rèn Luyện</div>
-                <div class="text-2xl font-bold text-blue-700">100đ</div>
-                <div class="text-xs text-gray-500 mt-1">Đánh giá theo từng kỳ</div>
-                <i class="fas fa-star absolute bottom-2 right-2 text-blue-100 text-4xl -z-0"></i>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8 animate-slide-up">
+            <!-- Box 1: ĐRL -->
+            <div class="bg-white p-5 rounded-xl shadow-soft hover-card border-l-4 border-blue-500 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-blue-500 bg-blue-50 px-2 py-1 rounded mb-2 inline-block">Định mức tối đa</span>
+                <div class="text-slate-500 text-xs font-semibold uppercase mt-1">Điểm Rèn Luyện</div>
+                <div class="text-3xl font-bold text-blue-700 mt-1">100<span class="text-sm font-normal text-slate-400">đ</span></div>
+                <div class="text-xs text-slate-400 mt-2 flex items-center"><i class="far fa-calendar-alt mr-1"></i> Đánh giá từng kỳ</div>
+                <i class="fas fa-star absolute bottom-3 right-3 text-blue-100 text-4xl group-hover:text-blue-200 transition-colors"></i>
             </div>
-            <!-- Box 2 -->
-            <div class="bg-white p-4 rounded card-shadow border-l-4 border-green-600 relative overflow-hidden group hover:bg-green-50 transition-colors">
-                <span class="highlight-tag text-green-600"><i class="fas fa-seedling mr-1"></i>Chỉ tiêu năm học</span>
-                <div class="text-gray-600 text-xs font-bold uppercase">Ngoại Khóa</div>
-                <div class="text-2xl font-bold text-green-700">105đ</div>
-                <div class="text-xs text-gray-500 mt-1">Tổng 03 học kỳ chính</div>
-                <i class="fas fa-running absolute bottom-2 right-2 text-green-100 text-4xl -z-0"></i>
+            <!-- Box 2: Ngoại khóa -->
+            <div class="bg-white p-5 rounded-xl shadow-soft hover-card border-l-4 border-green-500 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-green-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-green-600 bg-green-50 px-2 py-1 rounded mb-2 inline-block">Chỉ tiêu năm học</span>
+                <div class="text-slate-500 text-xs font-semibold uppercase mt-1">Ngoại Khóa</div>
+                <div class="text-3xl font-bold text-green-700 mt-1">105<span class="text-sm font-normal text-slate-400">đ</span></div>
+                <div class="text-xs text-slate-400 mt-2 flex items-center tooltip" data-tip="Bắt buộc phải tham gia đủ 3 học kỳ"><i class="fas fa-info-circle mr-1"></i> Tổng 03 kỳ chính</div>
+                <i class="fas fa-running absolute bottom-3 right-3 text-green-100 text-4xl group-hover:text-green-200 transition-colors"></i>
             </div>
-            <!-- Box 3 -->
-            <div class="bg-white p-4 rounded card-shadow border-l-4 border-yellow-500 relative overflow-hidden group hover:bg-yellow-50 transition-colors">
-                <span class="highlight-tag text-yellow-600"><i class="fas fa-exclamation-circle mr-1"></i>Ngưỡng báo động</span>
-                <div class="text-gray-600 text-xs font-bold uppercase">Cảnh Báo HV</div>
-                <div class="text-2xl font-bold text-yellow-600">&lt; 1.0 GPA</div>
-                <div class="text-xs text-gray-500 mt-1">Đối với kỳ thường</div>
-                <i class="fas fa-exclamation-triangle absolute bottom-2 right-2 text-yellow-100 text-4xl -z-0"></i>
+            <!-- Box 3: Cảnh báo -->
+            <div class="bg-white p-5 rounded-xl shadow-soft hover-card border-l-4 border-yellow-500 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-yellow-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-yellow-600 bg-yellow-50 px-2 py-1 rounded mb-2 inline-block">Ngưỡng báo động</span>
+                <div class="text-slate-500 text-xs font-semibold uppercase mt-1">Cảnh Báo HV</div>
+                <div class="text-3xl font-bold text-yellow-600 mt-1">&lt; 1.0 <span class="text-sm font-normal text-slate-400">GPA</span></div>
+                <div class="text-xs text-slate-400 mt-2 flex items-center"><i class="fas fa-exclamation-circle mr-1"></i> Đối với kỳ thường</div>
+                <i class="fas fa-exclamation-triangle absolute bottom-3 right-3 text-yellow-100 text-4xl group-hover:text-yellow-200 transition-colors"></i>
             </div>
-            <!-- Box 4 -->
-            <div class="bg-white p-4 rounded card-shadow border-l-4 border-red-500 relative overflow-hidden group hover:bg-red-50 transition-colors">
-                <span class="highlight-tag text-red-600"><i class="fas fa-ban mr-1"></i>Giới hạn đỏ</span>
-                <div class="text-gray-600 text-xs font-bold uppercase">Buộc Thôi Học</div>
-                <div class="text-2xl font-bold text-red-600">02 Lần</div>
-                <div class="text-xs text-gray-500 mt-1">Cảnh báo liên tiếp</div>
-                <i class="fas fa-user-times absolute bottom-2 right-2 text-red-100 text-4xl -z-0"></i>
+            <!-- Box 4: Thôi học -->
+            <div class="bg-white p-5 rounded-xl shadow-soft hover-card border-l-4 border-red-500 relative overflow-hidden group">
+                <div class="absolute top-0 right-0 w-20 h-20 bg-red-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                <span class="text-[10px] font-bold uppercase tracking-wider text-red-600 bg-red-50 px-2 py-1 rounded mb-2 inline-block">Giới hạn đỏ</span>
+                <div class="text-slate-500 text-xs font-semibold uppercase mt-1">Buộc Thôi Học</div>
+                <div class="text-3xl font-bold text-red-600 mt-1">02 <span class="text-sm font-normal text-slate-400">Lần</span></div>
+                <div class="text-xs text-slate-400 mt-2 flex items-center"><i class="fas fa-ban mr-1"></i> Cảnh báo liên tiếp</div>
+                <i class="fas fa-user-times absolute bottom-3 right-3 text-red-100 text-4xl group-hover:text-red-200 transition-colors"></i>
             </div>
         </div>
 
         <!-- Navigation Tabs -->
-        <div class="flex overflow-x-auto border-b border-gray-200 bg-white sticky top-0 z-40 shadow-sm rounded-t-lg">
-            <button onclick="openTab('tab-daotao')" class="tab-btn flex-1 min-w-[120px] px-4 py-3 text-sm font-medium hover:text-phenikaa-primary focus:outline-none tab-active transition-colors whitespace-nowrap" id="btn-daotao">
-                <i class="fas fa-graduation-cap mr-1"></i> Đào tạo (QĐ 1062)
+        <div class="flex overflow-x-auto border-b border-slate-200 bg-white sticky top-0 z-40 shadow-sm rounded-t-xl mb-6">
+            <button onclick="openTab('tab-daotao')" class="tab-btn flex-1 min-w-[140px] px-4 py-4 text-sm font-medium text-slate-500 hover:text-phenikaa-primary focus:outline-none transition-colors whitespace-nowrap tab-active" id="btn-daotao">
+                <i class="fas fa-graduation-cap mr-2"></i> Đào tạo (QĐ 1062)
             </button>
-            <button onclick="openTab('tab-ctsv')" class="tab-btn flex-1 min-w-[120px] px-4 py-3 text-sm font-medium text-gray-500 hover:text-phenikaa-primary focus:outline-none transition-colors whitespace-nowrap" id="btn-ctsv">
-                <i class="fas fa-gavel mr-1"></i> CTSV & Kỷ luật
+            <button onclick="openTab('tab-ctsv')" class="tab-btn flex-1 min-w-[140px] px-4 py-4 text-sm font-medium text-slate-500 hover:text-phenikaa-primary focus:outline-none transition-colors whitespace-nowrap" id="btn-ctsv">
+                <i class="fas fa-gavel mr-2"></i> CTSV & Kỷ luật
             </button>
-            <button onclick="openTab('tab-renluyen')" class="tab-btn flex-1 min-w-[120px] px-4 py-3 text-sm font-medium text-gray-500 hover:text-phenikaa-primary focus:outline-none transition-colors whitespace-nowrap" id="btn-renluyen">
-                <i class="fas fa-star mr-1"></i> Điểm Rèn luyện (Mới)
+            <button onclick="openTab('tab-renluyen')" class="tab-btn flex-1 min-w-[140px] px-4 py-4 text-sm font-medium text-slate-500 hover:text-phenikaa-primary focus:outline-none transition-colors whitespace-nowrap" id="btn-renluyen">
+                <i class="fas fa-star mr-2"></i> Điểm Rèn luyện
             </button>
-            <button onclick="openTab('tab-ngoaikhoa')" class="tab-btn flex-1 min-w-[120px] px-4 py-3 text-sm font-medium text-gray-500 hover:text-phenikaa-primary focus:outline-none transition-colors whitespace-nowrap" id="btn-ngoaikhoa">
-                <i class="fas fa-running mr-1"></i> Ngoại khóa (Mới)
+            <button onclick="openTab('tab-ngoaikhoa')" class="tab-btn flex-1 min-w-[140px] px-4 py-4 text-sm font-medium text-slate-500 hover:text-phenikaa-primary focus:outline-none transition-colors whitespace-nowrap" id="btn-ngoaikhoa">
+                <i class="fas fa-running mr-2"></i> Ngoại khóa (1112)
             </button>
         </div>
 
         <!-- TAB: QUY CHẾ ĐÀO TẠO (QĐ 1062) -->
-        <div id="tab-daotao" class="tab-content block mt-4">
-            <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+        <div id="tab-daotao" class="tab-content block animate-fade-in">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                 
                 <!-- 1. Đăng ký & Rút học phần -->
-                <div class="bg-white p-5 rounded card-shadow searchable-item">
-                    <h2 class="font-bold text-base text-phenikaa-primary border-b pb-2 mb-3 flex items-center">
-                        <i class="fas fa-book-open mr-2"></i>1. Tín chỉ & Học phí <span class="source-tag">QĐ 1062, Điều 8</span>
+                <div class="bg-white p-6 rounded-xl shadow-soft searchable-item hover:shadow-lg transition-shadow duration-300 border border-slate-100">
+                    <h2 class="font-bold text-base text-phenikaa-primary border-b border-slate-100 pb-3 mb-4 flex items-center">
+                        <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-book-open"></i></span>
+                        1. Tín chỉ & Học phí <span class="source-tag">QĐ 1062, Điều 8</span>
                     </h2>
-                    <div class="space-y-3">
-                        <div class="flex justify-between text-sm bg-gray-50 p-2 rounded">
-                            <span>Khối lượng Min/Kỳ:</span> <span class="font-bold text-gray-800">08 TC</span>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <span class="text-slate-600">Khối lượng Min/Kỳ</span> 
+                            <span class="font-bold text-slate-800 bg-white px-3 py-1 rounded shadow-sm">08 TC</span>
                         </div>
-                        <div class="flex justify-between text-sm bg-gray-50 p-2 rounded">
-                            <span>Khối lượng Max/Kỳ:</span> <span class="font-bold text-gray-800">16 TC (thường)</span>
+                        <div class="flex justify-between items-center text-sm bg-slate-50 p-3 rounded-lg border border-slate-100">
+                            <span class="text-slate-600">Khối lượng Max/Kỳ</span> 
+                            <span class="font-bold text-slate-800 bg-white px-3 py-1 rounded shadow-sm">16 TC <span class="text-xs font-normal text-slate-400">(kỳ thường)</span></span>
                         </div>
-                        <div class="bg-yellow-50 p-3 rounded border border-yellow-200 text-xs">
-                            <strong class="text-yellow-800 uppercase block mb-1"><i class="fas fa-wallet mr-1"></i>Chế tài Rút học phần (Hủy môn):</strong>
-                            <ul class="list-disc pl-5 space-y-1 text-gray-700">
-                                <li><strong>Trước 2 tuần đầu kỳ:</strong> Đóng <span class="text-red-600 font-bold">50%</span> học phí tín chỉ.</li>
-                                <li><strong>Sau 2 tuần đầu kỳ:</strong> Đóng <span class="text-red-600 font-bold">100%</span> học phí tín chỉ.</li>
-                                <li><strong>Bỏ học không phép (không rút):</strong> Nhận điểm <span class="text-red-600 font-bold">F (0.0)</span> + 100% học phí + Phải học lại.</li>
+                        <div class="bg-yellow-50 p-4 rounded-lg border border-yellow-100 text-xs">
+                            <strong class="text-yellow-700 uppercase block mb-2 flex items-center"><i class="fas fa-wallet mr-2"></i>Chế tài Rút học phần (Hủy môn):</strong>
+                            <ul class="space-y-2 text-slate-700">
+                                <li class="flex items-start"><i class="fas fa-clock text-yellow-500 mt-0.5 mr-2"></i><span><strong>Trước 2 tuần đầu kỳ:</strong> Đóng <span class="text-red-600 font-bold bg-white px-1 rounded">50%</span> học phí.</span></li>
+                                <li class="flex items-start"><i class="fas fa-history text-yellow-500 mt-0.5 mr-2"></i><span><strong>Sau 2 tuần đầu kỳ:</strong> Đóng <span class="text-red-600 font-bold bg-white px-1 rounded">100%</span> học phí.</span></li>
+                                <li class="flex items-start"><i class="fas fa-times-circle text-red-500 mt-0.5 mr-2"></i><span><strong>Bỏ học không phép:</strong> Điểm <span class="text-red-600 font-bold">F (0.0)</span> + 100% học phí + Học lại.</span></li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- 2. Cảnh báo học vụ (Quan trọng) -->
-                <div class="bg-white p-5 rounded card-shadow searchable-item border-l-4 border-red-500">
-                    <h2 class="font-bold text-base text-red-600 border-b border-red-100 pb-2 mb-3 flex items-center">
-                        <i class="fas fa-exclamation-circle mr-2"></i>2. Cảnh báo & Buộc Thôi học <span class="source-tag">Điều 21</span>
+                <div class="bg-white p-6 rounded-xl shadow-soft searchable-item hover:shadow-lg transition-shadow duration-300 border-l-4 border-red-500">
+                    <h2 class="font-bold text-base text-red-600 border-b border-red-50 pb-3 mb-4 flex items-center">
+                        <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-exclamation-triangle"></i></span>
+                        2. Cảnh báo & Buộc Thôi học <span class="source-tag">Điều 21</span>
                     </h2>
                     
-                    <div class="text-xs space-y-3">
+                    <div class="text-xs space-y-4">
                         <div>
-                            <p class="font-bold mb-1 text-gray-700">A. Ngưỡng Cảnh báo Học tập (CBHT):</p>
-                            <div class="grid grid-cols-2 gap-2">
-                                <div class="bg-red-50 p-2 rounded text-center">
-                                    <div class="text-gray-500">ĐTB Kỳ 1 (Đầu khóa)</div>
-                                    <div class="font-bold text-red-600 text-lg">&lt; 0.8</div>
+                            <p class="font-bold mb-2 text-slate-700 flex items-center"><i class="fas fa-chart-line text-slate-400 mr-2"></i>A. Ngưỡng Cảnh báo Học tập (CBHT):</p>
+                            <div class="grid grid-cols-2 gap-3 mb-3">
+                                <div class="bg-red-50 p-3 rounded-lg text-center border border-red-100">
+                                    <div class="text-slate-500 mb-1">GPA Kỳ 1 (Đầu khóa)</div>
+                                    <div class="font-bold text-red-600 text-xl">&lt; 0.8</div>
                                 </div>
-                                <div class="bg-red-50 p-2 rounded text-center">
-                                    <div class="text-gray-500">ĐTB Kỳ tiếp theo</div>
-                                    <div class="font-bold text-red-600 text-lg">&lt; 1.0</div>
+                                <div class="bg-red-50 p-3 rounded-lg text-center border border-red-100">
+                                    <div class="text-slate-500 mb-1">GPA Kỳ tiếp theo</div>
+                                    <div class="font-bold text-red-600 text-xl">&lt; 1.0</div>
                                 </div>
                             </div>
-                            <div class="mt-2 grid grid-cols-4 gap-1 text-center">
-                                <div class="bg-gray-100 p-1 rounded">
-                                    <div class="text-[9px]">Năm 1</div>
-                                    <div class="font-bold text-red-600">&lt; 1.2</div>
-                                </div>
-                                <div class="bg-gray-100 p-1 rounded">
-                                    <div class="text-[9px]">Năm 2</div>
-                                    <div class="font-bold text-red-600">&lt; 1.4</div>
-                                </div>
-                                <div class="bg-gray-100 p-1 rounded">
-                                    <div class="text-[9px]">Năm 3</div>
-                                    <div class="font-bold text-red-600">&lt; 1.6</div>
-                                </div>
-                                <div class="bg-gray-100 p-1 rounded">
-                                    <div class="text-[9px]">Năm 4</div>
-                                    <div class="font-bold text-red-600">&lt; 1.8</div>
-                                </div>
+                            <div class="text-center text-slate-500 font-medium bg-slate-100 p-1.5 rounded-t-lg text-[11px] uppercase tracking-wide">
+                                GPA Tích lũy dưới chuẩn
+                            </div>
+                            <div class="grid grid-cols-4 gap-1 text-center bg-slate-50 p-2 rounded-b-lg border border-t-0 border-slate-100">
+                                <div><div class="text-[10px] text-slate-400">Năm 1</div><div class="font-bold text-red-600">&lt; 1.2</div></div>
+                                <div><div class="text-[10px] text-slate-400">Năm 2</div><div class="font-bold text-red-600">&lt; 1.4</div></div>
+                                <div><div class="text-[10px] text-slate-400">Năm 3</div><div class="font-bold text-red-600">&lt; 1.6</div></div>
+                                <div><div class="text-[10px] text-slate-400">Năm 4</div><div class="font-bold text-red-600">&lt; 1.8</div></div>
                             </div>
                         </div>
 
-                        <div class="border-t border-dashed pt-2">
-                            <p class="font-bold mb-1 text-red-700">B. Bị Buộc Thôi Học khi:</p>
-                            <ul class="list-decimal pl-5 space-y-1 font-semibold text-red-700">
-                                <li>Số lần cảnh báo học tập liên tiếp: <strong>02 lần</strong>.</li>
-                                <li>Vượt quá thời gian đào tạo tối đa (Ví dụ: Ngành 4 năm -> Quá 8 năm).</li>
-                                <li>Bị kỷ luật mức buộc thôi học.</li>
+                        <div class="border-t border-dashed border-red-200 pt-3">
+                            <p class="font-bold mb-2 text-red-700 flex items-center"><i class="fas fa-skull text-red-400 mr-2"></i>B. Bị Buộc Thôi Học khi:</p>
+                            <ul class="space-y-2 pl-2">
+                                <li class="flex items-center text-red-700 font-medium bg-red-50 p-2 rounded border border-red-100">
+                                    <span class="bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] mr-2">1</span>
+                                    Số lần cảnh báo học tập liên tiếp: 02 lần.
+                                </li>
+                                <li class="flex items-center text-red-700 font-medium bg-red-50 p-2 rounded border border-red-100">
+                                    <span class="bg-red-500 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] mr-2">2</span>
+                                    Quá thời gian đào tạo tối đa (VD: Ngành 4 năm -> Quá 8 năm).
+                                </li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
                 <!-- 3. Tốt nghiệp & Hạ bậc -->
-                <div class="bg-white p-5 rounded card-shadow searchable-item">
-                    <h2 class="font-bold text-base text-phenikaa-primary border-b pb-2 mb-3 flex items-center">
-                        <i class="fas fa-award mr-2"></i>3. Xếp hạng & Hạ bậc Tốt nghiệp <span class="source-tag">Điều 27</span>
+                <div class="bg-white p-6 rounded-xl shadow-soft searchable-item hover:shadow-lg transition-shadow duration-300 border border-slate-100">
+                    <h2 class="font-bold text-base text-phenikaa-primary border-b border-slate-100 pb-3 mb-4 flex items-center">
+                        <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-medal"></i></span>
+                        3. Xếp hạng & Hạ bậc Tốt nghiệp <span class="source-tag">Điều 27</span>
                     </h2>
-                    <div class="overflow-x-auto mb-3">
+                    <div class="overflow-hidden rounded-lg border border-slate-200 mb-4">
                         <table class="w-full text-xs text-left">
-                            <thead class="bg-blue-50 text-blue-800">
-                                <tr><th class="p-2">Hạng</th><th class="p-2">Xuất sắc</th><th class="p-2">Giỏi</th><th class="p-2">Khá</th><th class="p-2">TB Khá</th></tr>
+                            <thead class="bg-slate-100 text-slate-600 font-semibold uppercase">
+                                <tr><th class="p-3">Hạng</th><th class="p-3 text-center text-green-600">Xuất sắc</th><th class="p-3 text-center text-blue-600">Giỏi</th><th class="p-3 text-center text-cyan-600">Khá</th><th class="p-3 text-center text-slate-500">TB Khá</th></tr>
                             </thead>
-                            <tbody class="divide-y">
-                                <tr><td class="p-2 font-bold">GPA</td><td class="p-2">3.60-4.00</td><td class="p-2">3.20-3.59</td><td class="p-2">2.50-3.19</td><td class="p-2">2.25-2.49</td></tr>
+                            <tbody class="divide-y divide-slate-100 bg-white">
+                                <tr><td class="p-3 font-bold text-slate-700">GPA</td><td class="p-3 text-center font-medium">3.60-4.00</td><td class="p-3 text-center font-medium">3.20-3.59</td><td class="p-3 text-center font-medium">2.50-3.19</td><td class="p-3 text-center font-medium">2.25-2.49</td></tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="bg-orange-50 p-3 rounded border border-orange-200 text-xs">
-                        <strong class="text-orange-800 uppercase block mb-1"><i class="fas fa-level-down-alt mr-1"></i>Bị GIẢM 01 bậc hạng (VD: Giỏi -> Khá) nếu:</strong>
-                        <ul class="list-disc pl-5 text-gray-700 space-y-1">
-                            <li>Số tín chỉ học lại vượt quá <strong>5%</strong> tổng số tín chỉ toàn khóa.</li>
-                            <li>Đã bị kỷ luật từ mức <strong>Cảnh cáo</strong> trở lên trong thời gian học.</li>
+                    <div class="bg-orange-50 p-4 rounded-lg border border-orange-100 text-xs">
+                        <strong class="text-orange-700 uppercase block mb-2 flex items-center"><i class="fas fa-level-down-alt mr-2 text-orange-500"></i>Bị GIẢM 01 bậc hạng (VD: Giỏi -> Khá) nếu:</strong>
+                        <ul class="space-y-2 text-slate-700 pl-1">
+                            <li class="flex items-start"><i class="fas fa-dot-circle text-orange-400 text-[8px] mt-1.5 mr-2"></i>Số tín chỉ học lại vượt quá <strong>&nbsp;5%&nbsp;</strong> tổng số tín chỉ toàn khóa.</li>
+                            <li class="flex items-start"><i class="fas fa-dot-circle text-orange-400 text-[8px] mt-1.5 mr-2"></i>Đã bị kỷ luật từ mức <strong>&nbsp;Cảnh cáo&nbsp;</strong> trở lên trong thời gian học.</li>
                         </ul>
                     </div>
                 </div>
 
-                <!-- 4. Quy định Khác (Bổ sung mới) -->
-                <div class="bg-white p-5 rounded card-shadow searchable-item">
-                    <h2 class="font-bold text-base text-phenikaa-primary border-b pb-2 mb-3 flex items-center">
-                        <i class="fas fa-info-circle mr-2"></i>4. Quy định Khác (Năm học, Song bằng)
+                <!-- 4. Quy định Khác -->
+                <div class="bg-white p-6 rounded-xl shadow-soft searchable-item hover:shadow-lg transition-shadow duration-300 border border-slate-100">
+                    <h2 class="font-bold text-base text-phenikaa-primary border-b border-slate-100 pb-3 mb-4 flex items-center">
+                        <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-info"></i></span>
+                        4. Quy định Khác <span class="text-xs font-normal text-slate-400 ml-1">(Năm học, Song bằng)</span>
                     </h2>
-                    <div class="text-xs space-y-3">
+                    <div class="text-xs space-y-4">
                         <div>
-                            <p class="font-bold text-gray-700 mb-1"><i class="fas fa-chart-line mr-1"></i>Xác định Trình độ năm học <span class="source-tag">Điều 20</span>:</p>
-                            <p class="text-gray-500 italic mb-1">Căn cứ số TC tích lũy (N) và số TC trung bình năm (M):</p>
-                            <div class="grid grid-cols-3 gap-2 text-center bg-gray-50 p-2 rounded">
-                                <div>Năm 1: N < M</div>
-                                <div>Năm 2: N < 2M</div>
-                                <div>Năm 3: N < 3M</div>
+                            <p class="font-bold text-slate-700 mb-2 flex items-center"><i class="fas fa-layer-group text-slate-400 mr-2"></i>Xác định Trình độ năm học <span class="source-tag ml-2">Điều 20</span>:</p>
+                            <div class="grid grid-cols-3 gap-2 text-center">
+                                <div class="bg-slate-50 p-3 rounded border border-slate-200 hover:bg-white hover:shadow-md transition-all">
+                                    <div class="text-slate-500 mb-1">Năm 1</div>
+                                    <div class="font-bold text-phenikaa-primary font-mono">N &lt; M</div>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded border border-slate-200 hover:bg-white hover:shadow-md transition-all">
+                                    <div class="text-slate-500 mb-1">Năm 2</div>
+                                    <div class="font-bold text-phenikaa-primary font-mono">M &le; N &lt; 2M</div>
+                                </div>
+                                <div class="bg-slate-50 p-3 rounded border border-slate-200 hover:bg-white hover:shadow-md transition-all">
+                                    <div class="text-slate-500 mb-1">Năm 3</div>
+                                    <div class="font-bold text-phenikaa-primary font-mono">2M &le; N &lt; 3M</div>
+                                </div>
                             </div>
+                            <p class="text-[10px] text-slate-400 mt-2 italic">* N: Tín chỉ tích lũy | M: Tín chỉ trung bình năm</p>
                         </div>
-                        <div class="border-t pt-2">
-                             <p class="font-bold text-gray-700 mb-1"><i class="fas fa-layer-group mr-1"></i>Học song bằng <span class="source-tag">Điều 31</span>:</p>
-                             <ul class="list-disc pl-5 text-gray-600">
-                                <li>Thời điểm: Sau khi kết thúc năm thứ 1.</li>
-                                <li>Điều kiện: GPA ≥ 2.5 (Khá) hoặc (GPA ≥ 2.0 + Đạt chuẩn đầu vào ngành 2).</li>
-                                <li>Bị buộc dừng nếu: GPA ngành 1 < 2.0 hoặc bị Cảnh báo học vụ.</li>
+                        <div class="border-t border-slate-100 pt-3">
+                             <p class="font-bold text-slate-700 mb-2 flex items-center"><i class="fas fa-graduation-cap text-slate-400 mr-2"></i>Học song bằng <span class="source-tag ml-2">Điều 31</span>:</p>
+                             <ul class="space-y-1.5 pl-1 text-slate-600">
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-0.5 mr-2 text-xs"></i><span>Thời điểm: Sau khi kết thúc năm thứ 1.</span></li>
+                                <li class="flex items-start"><i class="fas fa-check text-green-500 mt-0.5 mr-2 text-xs"></i><span>Điều kiện: GPA ≥ 2.5 (Khá) hoặc (GPA ≥ 2.0 + Đạt chuẩn đầu vào ngành 2).</span></li>
+                                <li class="flex items-start"><i class="fas fa-times text-red-500 mt-0.5 mr-2 text-xs"></i><span><strong>Bị buộc dừng nếu:</strong> GPA ngành 1 < 2.0 hoặc bị Cảnh báo học vụ.</span></li>
                              </ul>
                         </div>
                     </div>
@@ -236,39 +328,40 @@
         </div>
 
         <!-- TAB: CTSV & KỶ LUẬT (QĐ 112) -->
-        <div id="tab-ctsv" class="tab-content hidden-content mt-4">
-            <div class="bg-white p-5 rounded card-shadow searchable-item">
-                <div class="flex justify-between items-center border-b pb-2 mb-3">
+        <div id="tab-ctsv" class="tab-content hidden-content mt-4 animate-fade-in">
+            <div class="bg-white p-6 rounded-xl shadow-soft searchable-item border border-slate-100">
+                <div class="flex justify-between items-center border-b border-red-100 pb-3 mb-4">
                     <h2 class="font-bold text-base text-red-600 flex items-center">
-                        <i class="fas fa-gavel mr-2"></i>Khung Kỷ luật Trọng yếu <span class="source-tag ml-2">Phụ lục QĐ 112</span>
+                        <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-balance-scale"></i></span>
+                        Khung Kỷ luật Trọng yếu <span class="source-tag ml-2">Phụ lục QĐ 112</span>
                     </h2>
                 </div>
-                <div class="overflow-x-auto">
+                <div class="overflow-x-auto rounded-lg border border-slate-200">
                     <table class="w-full text-xs text-left">
-                        <thead class="bg-gray-100 font-bold text-gray-700">
+                        <thead class="bg-slate-100 font-bold text-slate-700 uppercase tracking-wide">
                             <tr>
                                 <th class="p-3">Hành vi vi phạm</th>
-                                <th class="p-3 w-1/4">Lần 1</th>
-                                <th class="p-3 w-1/4">Lần 2 / Tái phạm</th>
-                                <th class="p-3 w-1/4">Lần 3</th>
+                                <th class="p-3 w-1/5">Lần 1</th>
+                                <th class="p-3 w-1/5">Lần 2 / Tái phạm</th>
+                                <th class="p-3 w-1/5">Lần 3</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody class="divide-y divide-slate-100">
                             <!-- Thi cử -->
                             <tr class="bg-red-50 hover:bg-red-100 transition-colors">
-                                <td class="p-3 font-semibold text-red-800"><i class="fas fa-user-times mr-1"></i>Thi hộ / Nhờ thi hộ / Làm hộ đồ án</td>
+                                <td class="p-3 font-semibold text-red-800"><i class="fas fa-user-edit mr-2 opacity-70"></i>Thi hộ / Nhờ thi hộ / Làm hộ đồ án</td>
                                 <td class="p-3 text-red-600 font-bold">Đình chỉ học 01 năm</td>
-                                <td class="p-3 bg-red-600 text-white font-bold text-center rounded">Buộc thôi học</td>
-                                <td class="p-3 text-center">-</td>
+                                <td class="p-3"><span class="bg-red-600 text-white px-2 py-1 rounded font-bold text-[10px] uppercase">Buộc thôi học</span></td>
+                                <td class="p-3 text-center text-slate-400">-</td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3 font-semibold">Học hộ / Nhờ học hộ</td>
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-3 font-medium text-slate-700">Học hộ / Nhờ học hộ</td>
                                 <td class="p-3">Khiển trách toàn trường</td>
                                 <td class="p-3">Cảnh cáo</td>
                                 <td class="p-3 font-bold text-red-600">Đình chỉ 1 năm</td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3">Mang tài liệu vào phòng thi (dù chưa dùng)</td>
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-3 font-medium text-slate-700">Mang tài liệu vào phòng thi (dù chưa dùng)</td>
                                 <td class="p-3 text-orange-600 font-bold">Đình chỉ thi (0 điểm)</td>
                                 <td class="p-3">Cảnh cáo toàn trường</td>
                                 <td class="p-3 font-bold text-red-600">Đình chỉ 1 năm</td>
@@ -276,25 +369,25 @@
                             
                             <!-- Tệ nạn -->
                             <tr class="bg-red-50 hover:bg-red-100 transition-colors">
-                                <td class="p-3 font-semibold text-red-800"><i class="fas fa-skull mr-1"></i>Đánh bạc, Cá độ, Ma túy, Mại dâm</td>
-                                <td class="p-3 bg-red-600 text-white font-bold text-center rounded" colspan="3">Buộc thôi học + Chuyển cơ quan công an</td>
+                                <td class="p-3 font-semibold text-red-800"><i class="fas fa-skull-crossbones mr-2 opacity-70"></i>Đánh bạc, Cá độ, Ma túy, Mại dâm</td>
+                                <td class="p-3" colspan="3"><span class="bg-red-600 text-white px-2 py-1 rounded font-bold text-[10px] uppercase block w-fit">Buộc thôi học + Chuyển công an</span></td>
                             </tr>
                             
                             <!-- Hành vi khác -->
-                             <tr class="hover:bg-gray-50">
-                                <td class="p-3">Uống rượu bia, say rượu đến lớp</td>
+                             <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-3 font-medium text-slate-700">Uống rượu bia, say rượu đến lớp</td>
                                 <td class="p-3">Khiển trách</td>
                                 <td class="p-3">Cảnh cáo</td>
                                 <td class="p-3 font-bold text-red-600">Đình chỉ 1 năm</td>
                             </tr>
-                            <tr class="hover:bg-gray-50">
-                                <td class="p-3">Nghỉ học không phép (liên tục)</td>
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-3 font-medium text-slate-700">Nghỉ học không phép (liên tục)</td>
                                 <td class="p-3">3-6 ngày: Khiển trách</td>
                                 <td class="p-3">> 1 tuần: Cảnh cáo</td>
                                 <td class="p-3 font-bold text-red-600">> 4 tuần: Buộc thôi học</td>
                             </tr>
-                             <tr class="hover:bg-gray-50">
-                                <td class="p-3">Đăng tải thông tin sai lệch lên MXH</td>
+                             <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="p-3 font-medium text-slate-700">Đăng tải thông tin sai lệch lên MXH</td>
                                 <td class="p-3">Khiển trách</td>
                                 <td class="p-3">Cảnh cáo</td>
                                 <td class="p-3 font-bold text-red-600">Đình chỉ có thời hạn</td>
@@ -305,51 +398,52 @@
             </div>
              
              <!-- Khen thưởng -->
-            <div class="mt-5 bg-white p-5 rounded card-shadow searchable-item">
-                <h2 class="font-bold text-base text-phenikaa-primary border-b pb-2 mb-3 flex items-center">
-                    <i class="fas fa-medal mr-2"></i>Tiêu chuẩn Khen thưởng <span class="source-tag ml-2">Điều 7, QĐ 112</span>
+            <div class="mt-6 bg-white p-6 rounded-xl shadow-soft searchable-item border border-slate-100">
+                <h2 class="font-bold text-base text-phenikaa-primary border-b border-slate-100 pb-3 mb-4 flex items-center">
+                    <span class="bg-yellow-100 text-yellow-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-trophy"></i></span>
+                    Tiêu chuẩn Khen thưởng <span class="source-tag ml-2">Điều 7, QĐ 112</span>
                 </h2>
                 
                 <!-- Timeline xét thưởng -->
-                <div class="mb-4 bg-gray-50 p-3 rounded border border-gray-200">
-                    <strong class="text-gray-700 block mb-2"><i class="fas fa-clock mr-2"></i>Thời điểm xét khen thưởng:</strong>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs text-center">
-                        <div class="bg-white p-2 rounded shadow-sm border">
-                            <span class="block font-bold text-phenikaa-primary">Cuối mỗi học kỳ</span>
-                            <span class="text-gray-500">Xét Học bổng KKHT</span>
+                <div class="mb-5 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                    <strong class="text-slate-700 block mb-3 text-xs uppercase tracking-wide"><i class="fas fa-clock mr-2 text-phenikaa-secondary"></i>Thời điểm xét khen thưởng:</strong>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-center">
+                        <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-100 hover:border-phenikaa-light transition-colors">
+                            <span class="block font-bold text-phenikaa-primary mb-1">Cuối mỗi học kỳ</span>
+                            <span class="text-slate-500">Xét Học bổng KKHT</span>
                         </div>
-                        <div class="bg-white p-2 rounded shadow-sm border">
-                            <span class="block font-bold text-phenikaa-primary">Cuối mỗi năm học</span>
-                            <span class="text-gray-500">Xét danh hiệu SV Giỏi/Xuất sắc</span>
+                        <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-100 hover:border-phenikaa-light transition-colors">
+                            <span class="block font-bold text-phenikaa-primary mb-1">Cuối mỗi năm học</span>
+                            <span class="text-slate-500">Xét danh hiệu SV Giỏi/Xuất sắc</span>
                         </div>
-                        <div class="bg-white p-2 rounded shadow-sm border">
-                            <span class="block font-bold text-phenikaa-primary">Cuối khóa học</span>
-                            <span class="text-gray-500">Xét Hạng tốt nghiệp & Khen thưởng toàn khóa</span>
+                        <div class="bg-white p-3 rounded-lg shadow-sm border border-slate-100 hover:border-phenikaa-light transition-colors">
+                            <span class="block font-bold text-phenikaa-primary mb-1">Cuối khóa học</span>
+                            <span class="text-slate-500">Xét Hạng tốt nghiệp & Khen thưởng</span>
                         </div>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs">
-                    <div class="border p-4 rounded bg-yellow-50 border-yellow-200 shadow-sm">
-                        <p class="font-bold text-yellow-800 mb-2 uppercase text-sm">Sinh viên Xuất sắc</p>
-                        <ul class="list-none space-y-1 text-yellow-900">
-                            <li><i class="fas fa-check mr-1"></i>GPA ≥ 3.6</li>
-                            <li><i class="fas fa-check mr-1"></i>ĐRL Xuất sắc (90-100)</li>
-                            <li><i class="fas fa-ban mr-1"></i>Không kỷ luật, không thi lại.</li>
+                    <div class="bg-gradient-to-br from-yellow-50 to-white p-4 rounded-xl border border-yellow-200 shadow-sm hover:shadow-md transition-shadow">
+                        <p class="font-bold text-yellow-700 mb-3 uppercase text-sm border-b border-yellow-100 pb-2">Sinh viên Xuất sắc</p>
+                        <ul class="space-y-2 text-yellow-900">
+                            <li class="flex items-center"><i class="fas fa-check-circle mr-2 text-yellow-500"></i>GPA ≥ 3.6</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle mr-2 text-yellow-500"></i>ĐRL Xuất sắc (90-100)</li>
+                            <li class="flex items-center"><i class="fas fa-shield-alt mr-2 text-yellow-500"></i>Không kỷ luật, không thi lại.</li>
                         </ul>
                     </div>
-                    <div class="border p-4 rounded bg-blue-50 border-blue-200 shadow-sm">
-                        <p class="font-bold text-blue-800 mb-2 uppercase text-sm">Sinh viên Giỏi</p>
-                         <ul class="list-none space-y-1 text-blue-900">
-                            <li><i class="fas fa-check mr-1"></i>GPA 3.2 - 3.59</li>
-                            <li><i class="fas fa-check mr-1"></i>ĐRL Tốt (80-89)</li>
+                    <div class="bg-gradient-to-br from-blue-50 to-white p-4 rounded-xl border border-blue-200 shadow-sm hover:shadow-md transition-shadow">
+                        <p class="font-bold text-blue-700 mb-3 uppercase text-sm border-b border-blue-100 pb-2">Sinh viên Giỏi</p>
+                         <ul class="space-y-2 text-blue-900">
+                            <li class="flex items-center"><i class="fas fa-check-circle mr-2 text-blue-500"></i>GPA 3.2 - 3.59</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle mr-2 text-blue-500"></i>ĐRL Tốt (80-89)</li>
                         </ul>
                     </div>
-                    <div class="border p-4 rounded bg-gray-50 border-gray-200 shadow-sm">
-                        <p class="font-bold text-gray-800 mb-2 uppercase text-sm">Sinh viên Khá</p>
-                         <ul class="list-none space-y-1 text-gray-900">
-                            <li><i class="fas fa-check mr-1"></i>GPA 2.5 - 3.19</li>
-                            <li><i class="fas fa-check mr-1"></i>ĐRL Khá (65-79)</li>
+                    <div class="bg-gradient-to-br from-slate-50 to-white p-4 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                        <p class="font-bold text-slate-700 mb-3 uppercase text-sm border-b border-slate-100 pb-2">Sinh viên Khá</p>
+                         <ul class="space-y-2 text-slate-900">
+                            <li class="flex items-center"><i class="fas fa-check-circle mr-2 text-slate-400"></i>GPA 2.5 - 3.19</li>
+                            <li class="flex items-center"><i class="fas fa-check-circle mr-2 text-slate-400"></i>ĐRL Khá (65-79)</li>
                         </ul>
                     </div>
                 </div>
@@ -357,91 +451,96 @@
         </div>
 
         <!-- TAB: ĐIỂM RÈN LUYỆN (QĐ 1113 - 2024) -->
-        <div id="tab-renluyen" class="tab-content hidden-content mt-4">
-            <div class="bg-white p-5 rounded card-shadow mb-4">
-                <div class="flex justify-between items-center border-b pb-3 mb-4">
+        <div id="tab-renluyen" class="tab-content hidden-content mt-4 animate-fade-in">
+            <div class="bg-white p-6 rounded-xl shadow-soft mb-6 border border-slate-100">
+                <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
                     <h2 class="font-bold text-lg text-phenikaa-primary flex items-center">
-                        <i class="fas fa-list-ol mr-2"></i>Cấu trúc Điểm Rèn Luyện (100đ)
+                        <span class="bg-blue-100 text-blue-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-list-ol"></i></span>
+                        Cấu trúc Điểm Rèn Luyện (100đ)
                     </h2>
                     <span class="source-tag">QĐ 1113/QĐ-ĐHP-CTSV</span>
                 </div>
                 
-                <div class="overflow-x-auto">
-                    <table class="w-full text-xs text-left border-collapse border border-gray-200">
-                        <thead class="bg-gray-100 text-gray-700">
+                <div class="overflow-x-auto rounded-lg border border-slate-200">
+                    <table class="w-full text-xs text-left border-collapse">
+                        <thead class="bg-slate-100 text-slate-600 font-bold uppercase">
                             <tr>
-                                <th class="p-3 border text-left w-1/4">Tiêu chuẩn (TC)</th>
-                                <th class="p-3 border text-center w-16">Max</th>
-                                <th class="p-3 border text-left">Nội dung cộng điểm</th>
-                                <th class="p-3 border text-left w-1/3 text-red-600">Nội dung trừ điểm</th>
+                                <th class="p-3 w-1/4">Tiêu chuẩn (TC)</th>
+                                <th class="p-3 text-center w-16">Max</th>
+                                <th class="p-3">Nội dung cộng điểm</th>
+                                <th class="p-3 w-1/3 text-red-600">Nội dung trừ điểm</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-gray-100">
+                        <tbody class="divide-y divide-slate-100">
                             <!-- TC1 -->
-                            <tr class="hover:bg-blue-50 transition-colors">
-                                <td class="p-3 border font-bold text-gray-700">1. Ý thức học tập & NCKH</td>
-                                <td class="p-3 border text-center font-bold text-blue-600">20</td>
-                                <td class="p-3 border">
-                                    <div class="grid grid-cols-2 gap-x-4">
-                                        <div>GPA ≥ 3.6: <strong>10đ</strong></div>
-                                        <div>GPA 3.2-3.59: <strong>8đ</strong></div>
-                                        <div>GPA 2.5-3.19: <strong>6đ</strong></div>
-                                        <div>GPA 2.0-2.49: <strong>4đ</strong></div>
+                            <tr class="hover:bg-blue-50 transition-colors group">
+                                <td class="p-3 font-semibold text-slate-700 border-r border-slate-100">1. Ý thức học tập & NCKH</td>
+                                <td class="p-3 text-center font-bold text-blue-600 border-r border-slate-100 bg-white group-hover:bg-blue-50">20</td>
+                                <td class="p-3 border-r border-slate-100">
+                                    <div class="grid grid-cols-2 gap-x-4 mb-2">
+                                        <div><span class="text-green-600 font-bold">10đ:</span> GPA ≥ 3.6</div>
+                                        <div><span class="text-blue-500 font-bold">8đ:</span> GPA 3.2-3.59</div>
+                                        <div><span class="text-cyan-500 font-bold">6đ:</span> GPA 2.5-3.19</div>
+                                        <div><span class="text-slate-500 font-bold">4đ:</span> GPA 2.0-2.49</div>
                                     </div>
-                                    <div class="mt-1 text-gray-500">NCKH/Học thuật/Bài báo: +2 đến 10đ.</div>
+                                    <div class="text-slate-500 italic"><i class="fas fa-flask mr-1 text-purple-400"></i>NCKH/Học thuật/Bài báo: +2 đến 10đ.</div>
                                 </td>
-                                <td class="p-3 border text-red-600">
+                                <td class="p-3 text-red-600">
                                     - Vi phạm quy chế thi: <strong>-20đ</strong>/lần<br>
                                     - Đi muộn: <strong>-1đ</strong>/tiết; Nghỉ học: <strong>-3đ</strong>/tiết
                                 </td>
                             </tr>
                             <!-- TC2 -->
-                            <tr class="hover:bg-blue-50 transition-colors">
-                                <td class="p-3 border font-bold text-gray-700">2. Chấp hành Nội quy</td>
-                                <td class="p-3 border text-center font-bold text-blue-600">25</td>
-                                <td class="p-3 border">
-                                    - Không vi phạm quy chế: <strong>5đ</strong><br>
-                                    - Đóng học phí đúng hạn: <strong>7đ</strong><br>
-                                    - Làm khảo sát đầy đủ: <strong>5đ</strong><br>
-                                    - Tham gia SHCD: <strong>2đ</strong>, Họp lớp: <strong>3đ</strong>
+                            <tr class="hover:bg-blue-50 transition-colors group">
+                                <td class="p-3 font-semibold text-slate-700 border-r border-slate-100">2. Chấp hành Nội quy</td>
+                                <td class="p-3 text-center font-bold text-blue-600 border-r border-slate-100 bg-white group-hover:bg-blue-50">25</td>
+                                <td class="p-3 border-r border-slate-100">
+                                    <ul class="list-none space-y-1">
+                                        <li><i class="fas fa-check text-green-500 mr-1"></i>Không vi phạm quy chế: <strong>5đ</strong></li>
+                                        <li><i class="fas fa-check text-green-500 mr-1"></i>Đóng học phí đúng hạn: <strong>7đ</strong></li>
+                                        <li><i class="fas fa-check text-green-500 mr-1"></i>Làm khảo sát đầy đủ: <strong>5đ</strong></li>
+                                        <li><i class="fas fa-check text-green-500 mr-1"></i>Tham gia SHCD: <strong>2đ</strong>, Họp lớp: <strong>3đ</strong></li>
+                                    </ul>
                                 </td>
-                                <td class="p-3 border text-red-600">
+                                <td class="p-3 text-red-600 italic">
                                     Trừ điểm tương ứng với từng mục nếu vi phạm.
                                 </td>
                             </tr>
                             <!-- TC3 -->
-                            <tr class="hover:bg-blue-50 transition-colors">
-                                <td class="p-3 border font-bold text-gray-700">3. Chính trị - Xã hội - Văn thể</td>
-                                <td class="p-3 border text-center font-bold text-blue-600">20</td>
-                                <td class="p-3 border bg-gray-50">
-                                    <i class="fas fa-calculator mr-1"></i><strong>Quy đổi từ HĐNK Nhóm 1:</strong><br>
-                                    Công thức: <code>(Điểm HĐNK * 20) / 45</code><br>
-                                    <span class="italic text-gray-500">(Làm tròn lên số nguyên gần nhất)</span>
+                            <tr class="hover:bg-blue-50 transition-colors group">
+                                <td class="p-3 font-semibold text-slate-700 border-r border-slate-100">3. Chính trị - Xã hội - Văn thể</td>
+                                <td class="p-3 text-center font-bold text-blue-600 border-r border-slate-100 bg-white group-hover:bg-blue-50">20</td>
+                                <td class="p-3 border-r border-slate-100 bg-slate-50 group-hover:bg-blue-50/50">
+                                    <i class="fas fa-calculator mr-1 text-slate-400"></i><strong>Quy đổi từ HĐNK Nhóm 1:</strong><br>
+                                    <code class="bg-white px-2 py-0.5 rounded border border-slate-200 text-phenikaa-primary font-mono mt-1 block w-fit">Điểm = (HĐNK * 20) / 45</code>
+                                    <span class="italic text-slate-400 text-[10px] mt-1 block">(Làm tròn lên số nguyên gần nhất)</span>
                                 </td>
-                                <td class="p-3 border bg-gray-50"></td>
+                                <td class="p-3 border-r border-slate-100 bg-slate-50 group-hover:bg-blue-50/50"></td>
                             </tr>
                             <!-- TC4 -->
-                            <tr class="hover:bg-blue-50 transition-colors">
-                                <td class="p-3 border font-bold text-gray-700">4. Quan hệ cộng đồng</td>
-                                <td class="p-3 border text-center font-bold text-blue-600">25</td>
-                                <td class="p-3 border bg-gray-50">
-                                    <i class="fas fa-calculator mr-1"></i><strong>Quy đổi từ HĐNK Nhóm 2:</strong><br>
-                                    Công thức: <code>(Điểm HĐNK * 25) / 60</code><br>
-                                    <span class="italic text-gray-500">(Làm tròn lên số nguyên gần nhất)</span>
+                            <tr class="hover:bg-blue-50 transition-colors group">
+                                <td class="p-3 font-semibold text-slate-700 border-r border-slate-100">4. Quan hệ cộng đồng</td>
+                                <td class="p-3 text-center font-bold text-blue-600 border-r border-slate-100 bg-white group-hover:bg-blue-50">25</td>
+                                <td class="p-3 border-r border-slate-100 bg-slate-50 group-hover:bg-blue-50/50">
+                                    <i class="fas fa-calculator mr-1 text-slate-400"></i><strong>Quy đổi từ HĐNK Nhóm 2:</strong><br>
+                                    <code class="bg-white px-2 py-0.5 rounded border border-slate-200 text-phenikaa-primary font-mono mt-1 block w-fit">Điểm = (HĐNK * 25) / 60</code>
+                                    <span class="italic text-slate-400 text-[10px] mt-1 block">(Làm tròn lên số nguyên gần nhất)</span>
                                 </td>
-                                <td class="p-3 border bg-gray-50"></td>
+                                <td class="p-3 border-r border-slate-100 bg-slate-50 group-hover:bg-blue-50/50"></td>
                             </tr>
                             <!-- TC5 -->
-                            <tr class="hover:bg-blue-50 transition-colors">
-                                <td class="p-3 border font-bold text-gray-700">5. Cán bộ lớp & Thành tích</td>
-                                <td class="p-3 border text-center font-bold text-blue-600">10</td>
-                                <td class="p-3 border">
-                                    - Lớp trưởng/Bí thư/CN CLB: <strong>5đ</strong><br>
-                                    - Lớp phó/BCH/Phó CN: <strong>4đ</strong><br>
-                                    - Kết nạp Đảng: <strong>10đ</strong>; Học cảm tình Đảng: <strong>5đ</strong><br>
-                                    - SV 5 tốt: 4-10đ
+                            <tr class="hover:bg-blue-50 transition-colors group">
+                                <td class="p-3 font-semibold text-slate-700 border-r border-slate-100">5. Cán bộ lớp & Thành tích</td>
+                                <td class="p-3 text-center font-bold text-blue-600 border-r border-slate-100 bg-white group-hover:bg-blue-50">10</td>
+                                <td class="p-3 border-r border-slate-100">
+                                    <ul class="list-none space-y-1">
+                                        <li>- Lớp trưởng/Bí thư/CN CLB: <strong>5đ</strong></li>
+                                        <li>- Lớp phó/BCH/Phó CN: <strong>4đ</strong></li>
+                                        <li>- Kết nạp Đảng: <strong>10đ</strong>; Học cảm tình Đảng: <strong>5đ</strong></li>
+                                        <li>- SV 5 tốt: 4-10đ</li>
+                                    </ul>
                                 </td>
-                                <td class="p-3 border text-red-600">
+                                <td class="p-3 text-red-600">
                                     - Cán bộ thiếu trách nhiệm: <strong>-10đ</strong>
                                 </td>
                             </tr>
@@ -449,98 +548,101 @@
                     </table>
                 </div>
 
-                <div class="mt-4 p-4 bg-red-50 rounded border border-red-200 text-xs">
-                    <strong class="text-red-800 uppercase block mb-1"><i class="fas fa-skull-crossbones mr-2"></i>Hệ quả ĐRL Thấp (Điều 11):</strong>
-                    <ul class="list-disc pl-5 text-red-700 space-y-1">
-                        <li><strong>Yếu/Kém 2 kỳ liên tiếp:</strong> Tạm ngừng học ít nhất 1 kỳ.</li>
-                        <li><strong>Yếu/Kém 2 kỳ liên tiếp lần thứ 2:</strong> Buộc thôi học.</li>
-                        <li><strong>Không tự đánh giá trên hệ thống:</strong> Xếp loại Kém (0 điểm).</li>
-                    </ul>
+                <div class="mt-4 p-4 bg-red-50 rounded-lg border border-red-100 text-xs flex items-start">
+                    <i class="fas fa-skull-crossbones text-red-500 text-lg mr-3 mt-0.5"></i>
+                    <div>
+                        <strong class="text-red-700 uppercase block mb-1">Hệ quả ĐRL Thấp (Điều 11):</strong>
+                        <ul class="space-y-1 text-red-600 pl-1">
+                            <li><i class="fas fa-dot-circle text-[8px] mr-2"></i><strong>Yếu/Kém 2 kỳ liên tiếp:</strong> Tạm ngừng học ít nhất 1 kỳ.</li>
+                            <li><i class="fas fa-dot-circle text-[8px] mr-2"></i><strong>Yếu/Kém 2 kỳ liên tiếp lần thứ 2:</strong> Buộc thôi học.</li>
+                            <li><i class="fas fa-dot-circle text-[8px] mr-2"></i><strong>Không tự đánh giá trên hệ thống:</strong> Xếp loại Kém (0 điểm).</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
 
         <!-- TAB: NGOẠI KHÓA (QĐ 1112 - 2024) -->
-        <div id="tab-ngoaikhoa" class="tab-content hidden-content mt-4">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div id="tab-ngoaikhoa" class="tab-content hidden-content mt-4 animate-fade-in">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                 
                 <!-- Chỉ tiêu -->
-                <div class="bg-white p-5 rounded card-shadow border-t-4 border-green-500">
-                    <h3 class="font-bold text-green-700 mb-3 text-sm flex items-center">
-                        <i class="fas fa-check-circle mr-2"></i>CHỈ TIÊU BẮT BUỘC
+                <div class="bg-white p-6 rounded-xl shadow-soft hover:shadow-lg transition-shadow duration-300 border-t-4 border-green-500">
+                    <h3 class="font-bold text-green-700 mb-4 text-sm flex items-center uppercase tracking-wide">
+                        <i class="fas fa-bullseye mr-2"></i>Chỉ tiêu bắt buộc
                     </h3>
                     <div class="space-y-4 text-center">
-                        <div class="p-3 bg-gray-50 rounded border border-gray-200">
-                            <p class="text-xs text-gray-500 uppercase font-bold">Mỗi học kỳ</p>
-                            <p class="text-3xl font-bold text-gray-800">35đ</p>
-                            <p class="text-[10px] text-gray-500 mt-1">Cơ cấu: 15đ Nhóm 1 + 20đ Nhóm 2</p>
+                        <div class="p-4 bg-slate-50 rounded-lg border border-slate-200">
+                            <p class="text-xs text-slate-500 uppercase font-bold mb-1">Mỗi học kỳ</p>
+                            <p class="text-4xl font-bold text-slate-700 mb-1">35<span class="text-sm font-normal text-slate-400">đ</span></p>
+                            <span class="inline-block bg-white px-2 py-1 rounded text-[10px] text-slate-500 border border-slate-100">15đ Nhóm 1 + 20đ Nhóm 2</span>
                         </div>
-                        <div class="p-3 bg-yellow-50 rounded border border-yellow-200 relative">
-                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-600 text-white text-[10px] px-2 py-0.5 rounded shadow font-bold">LƯU Ý QUAN TRỌNG</div>
-                            <p class="text-xs text-yellow-600 uppercase font-bold mt-1">Cả năm học (03 học kỳ chính)</p>
-                            <p class="text-3xl font-bold text-yellow-700">105đ</p>
-                            <p class="text-[10px] text-yellow-600 mt-1 italic leading-tight">
-                                <i class="fas fa-check-circle"></i> Chỉ tiêu tính cho 03 học kỳ chính/năm.<br>
-                                35đ/kỳ x 3 kỳ = 105đ.
+                        <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200 relative group">
+                            <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-yellow-500 text-white text-[10px] px-3 py-0.5 rounded-full shadow font-bold tracking-wider">LƯU Ý QUAN TRỌNG</div>
+                            <p class="text-xs text-yellow-700 uppercase font-bold mt-2">Cả năm học (03 kỳ)</p>
+                            <p class="text-4xl font-bold text-yellow-600 mb-1">105<span class="text-sm font-normal text-yellow-400">đ</span></p>
+                            <p class="text-[10px] text-yellow-700 mt-2 italic leading-tight bg-yellow-100/50 p-2 rounded">
+                                <i class="fas fa-calculator mr-1"></i>35đ/kỳ x 3 kỳ = 105đ.<br>
+                                <span class="font-bold text-red-500 block mt-1">(Chưa bao gồm kỳ phụ/hè)</span>
                             </p>
                         </div>
-                        <div class="p-3 bg-blue-50 rounded border border-blue-200">
-                            <p class="text-xs text-blue-500 uppercase font-bold">Toàn khóa (4-4.5 năm)</p>
-                            <p class="text-2xl font-bold text-blue-600">350đ</p>
+                        <div class="p-4 bg-blue-50 rounded-lg border border-blue-200">
+                            <p class="text-xs text-blue-600 uppercase font-bold mb-1">Toàn khóa (4-4.5 năm)</p>
+                            <p class="text-3xl font-bold text-blue-600">350<span class="text-sm font-normal text-blue-400">đ</span></p>
                         </div>
                     </div>
                 </div>
 
                 <!-- Phân nhóm chi tiết -->
-                <div class="bg-white p-5 rounded card-shadow md:col-span-2">
-                    <h3 class="font-bold text-phenikaa-primary border-b pb-2 mb-3 flex items-center">
-                        <i class="fas fa-tags mr-2"></i>Phân nhóm & Khung điểm (QĐ 1112)
+                <div class="bg-white p-6 rounded-xl shadow-soft hover:shadow-lg transition-shadow duration-300 md:col-span-2">
+                    <h3 class="font-bold text-phenikaa-primary border-b border-slate-100 pb-3 mb-4 flex items-center uppercase tracking-wide">
+                        <i class="fas fa-tags mr-2"></i>Phân nhóm & Khung điểm <span class="source-tag ml-2">QĐ 1112</span>
                     </h3>
-                    <div class="overflow-x-auto">
+                    <div class="overflow-x-auto rounded-lg border border-slate-200 mb-4">
                         <table class="w-full text-xs text-left">
-                            <thead class="bg-gray-100 font-bold text-gray-700">
+                            <thead class="bg-slate-100 font-bold text-slate-700 uppercase">
                                 <tr>
-                                    <th class="p-2 w-16">Nhóm</th>
-                                    <th class="p-2">Hoạt động bao gồm</th>
-                                    <th class="p-2 text-center">Cấp Khoa/CLB</th>
-                                    <th class="p-2 text-center">Cấp Trường/Xã</th>
-                                    <th class="p-2 text-center">Cấp QG/TP</th>
+                                    <th class="p-3 w-20">Nhóm</th>
+                                    <th class="p-3">Hoạt động bao gồm</th>
+                                    <th class="p-3 text-center">Khoa/CLB</th>
+                                    <th class="p-3 text-center">Trường/Xã</th>
+                                    <th class="p-3 text-center">QG/TP</th>
                                 </tr>
                             </thead>
-                            <tbody class="divide-y">
-                                <tr class="hover:bg-blue-50">
-                                    <td class="p-2 font-bold text-blue-700">Nhóm 1</td>
-                                    <td class="p-2">Giáo dục chính trị, Học thuật, Văn nghệ, Thể thao</td>
-                                    <td class="p-2 text-center">10 - 15</td>
-                                    <td class="p-2 text-center">20 - 30</td>
-                                    <td class="p-2 text-center">35</td>
+                            <tbody class="divide-y divide-slate-100">
+                                <tr class="hover:bg-blue-50 transition-colors">
+                                    <td class="p-3 font-bold text-blue-600 bg-blue-50/30">Nhóm 1</td>
+                                    <td class="p-3">GD Chính trị, Học thuật, Văn nghệ, Thể thao</td>
+                                    <td class="p-3 text-center font-medium">10 - 15</td>
+                                    <td class="p-3 text-center font-medium">20 - 30</td>
+                                    <td class="p-3 text-center font-bold text-phenikaa-primary">35</td>
                                 </tr>
-                                <tr class="hover:bg-green-50">
-                                    <td class="p-2 font-bold text-green-700">Nhóm 2</td>
-                                    <td class="p-2">Tình nguyện, Hiến máu, Tiếp sức mùa thi, Triệu tập</td>
-                                    <td class="p-2 text-center">10 - 15</td>
-                                    <td class="p-2 text-center">20 - 30</td>
-                                    <td class="p-2 text-center">35</td>
+                                <tr class="hover:bg-green-50 transition-colors">
+                                    <td class="p-3 font-bold text-green-600 bg-green-50/30">Nhóm 2</td>
+                                    <td class="p-3">Tình nguyện, Hiến máu, Tiếp sức mùa thi, Triệu tập</td>
+                                    <td class="p-3 text-center font-medium">10 - 15</td>
+                                    <td class="p-3 text-center font-medium">20 - 30</td>
+                                    <td class="p-3 text-center font-bold text-phenikaa-primary">35</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                     
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4 text-xs">
-                        <div class="bg-blue-50 p-3 rounded border border-blue-200">
-                            <strong class="text-blue-800 block mb-1"><i class="fas fa-plus-circle mr-1"></i>Cơ chế Cộng điểm:</strong>
-                            <ul class="list-disc pl-4 text-blue-900 space-y-1">
-                                <li><strong>Hiến máu:</strong> 20đ/lần (Nhóm 2).</li>
-                                <li><strong>Đăng ký & Tham gia đủ:</strong> +30% số điểm.</li>
-                                <li><strong>Tham gia tổ chức:</strong> Tính mức điểm tối đa của khung.</li>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+                        <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
+                            <strong class="text-blue-800 block mb-2 flex items-center uppercase"><i class="fas fa-plus-circle mr-2"></i>Cơ chế Cộng điểm:</strong>
+                            <ul class="space-y-2 text-blue-900 pl-1">
+                                <li class="flex items-center"><i class="fas fa-tint mr-2 text-red-400"></i><strong>Hiến máu:</strong> 20đ/lần (Nhóm 2).</li>
+                                <li class="flex items-center"><i class="fas fa-check-double mr-2 text-blue-400"></i><strong>Đăng ký & Tham gia đủ:</strong> +30% số điểm.</li>
+                                <li class="flex items-center"><i class="fas fa-users-cog mr-2 text-blue-400"></i><strong>Tham gia tổ chức:</strong> Tính mức tối đa của khung.</li>
                             </ul>
                         </div>
-                        <div class="bg-red-50 p-3 rounded border border-red-200">
-                            <strong class="text-red-800 block mb-1"><i class="fas fa-minus-circle mr-1"></i>Cơ chế Trừ điểm:</strong>
-                            <ul class="list-disc pl-4 text-red-900 space-y-1">
-                                <li><strong>Đăng ký nhưng vắng (không lý do):</strong> -30% số điểm hoạt động.</li>
-                                <li><strong>BCS điểm danh gian lận:</strong> -20đ.</li>
-                                <li><strong>Vắng mặt buổi triệu tập:</strong> Không tính điểm + Trừ điểm rèn luyện.</li>
+                        <div class="bg-red-50 p-4 rounded-lg border border-red-100">
+                            <strong class="text-red-800 block mb-2 flex items-center uppercase"><i class="fas fa-minus-circle mr-2"></i>Cơ chế Trừ điểm:</strong>
+                            <ul class="space-y-2 text-red-900 pl-1">
+                                <li class="flex items-center"><i class="fas fa-user-slash mr-2 text-red-400"></i><strong>ĐK nhưng vắng (không lý do):</strong> -30% điểm.</li>
+                                <li class="flex items-center"><i class="fas fa-pen-alt mr-2 text-red-400"></i><strong>BCS điểm danh gian lận:</strong> -20đ.</li>
+                                <li class="flex items-center"><i class="fas fa-envelope-open-text mr-2 text-red-400"></i><strong>Vắng triệu tập:</strong> Không tính điểm + Trừ ĐRL.</li>
                             </ul>
                         </div>
                     </div>
@@ -550,31 +652,45 @@
 
     </main>
 
-    <!-- Footer (Giữ nguyên) -->
-    <footer class="bg-gray-800 text-white py-6 mt-8 text-xs flex-none">
+    <!-- Footer -->
+    <footer class="bg-slate-800 text-white py-8 mt-auto text-xs flex-none border-t border-slate-700">
         <div class="container mx-auto px-4 text-center">
-            <p class="font-bold uppercase text-gray-400 mb-1">Tổng hợp bởi Hiếu Đoàn - Văn phòng trường Kỹ thuật</p>
-            <p class="text-gray-500">Tài liệu tra cứu nhanh dành cho CBQLL và Sinh viên.</p>
-            <p class="text-gray-500">Nội dung được trích dẫn từ Quy định, Quy chế, do đó sinh viên cần đọc đầy đủ toàn văn các văn bản này để nắm thông tin trọn vẹn.</p>
+            <div class="w-12 h-12 bg-slate-700 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-400 text-lg font-bold">P</div>
+            <p class="font-bold uppercase text-slate-300 mb-2 tracking-wide">Tổng hợp bởi Văn phòng trường - Khối Kỹ thuật</p>
+            <p class="text-slate-400 mb-1">Tài liệu tra cứu nhanh dành cho CBQLL và Sinh viên.</p>
+            <p class="text-slate-500 italic max-w-2xl mx-auto">Nội dung được trích dẫn từ Quy định, Quy chế, do đó sinh viên cần đọc đầy đủ toàn văn các văn bản gốc để nắm thông tin trọn vẹn.</p>
         </div>
     </footer>
 
     <script>
         function openTab(tabId) {
+            // Hide all tabs with fade out effect (optional, handled by CSS animation on show)
             var contents = document.getElementsByClassName("tab-content");
             for (var i = 0; i < contents.length; i++) {
                 contents[i].style.display = "none";
             }
+            
+            // Remove active styles
             var buttons = document.getElementsByClassName("tab-btn");
             for (var i = 0; i < buttons.length; i++) {
                 buttons[i].classList.remove("tab-active", "text-phenikaa-primary");
-                buttons[i].classList.add("text-gray-500");
+                buttons[i].classList.add("text-slate-500");
             }
-            document.getElementById(tabId).style.display = "block";
+
+            // Show selected tab
+            var selectedTab = document.getElementById(tabId);
+            selectedTab.style.display = "block";
+            
+            // Re-trigger animation
+            selectedTab.classList.remove('animate-fade-in');
+            void selectedTab.offsetWidth; // trigger reflow
+            selectedTab.classList.add('animate-fade-in');
+
+            // Add active styles to button
             var btnId = "btn-" + tabId.split("-")[1];
             var activeBtn = document.getElementById(btnId);
             activeBtn.classList.add("tab-active", "text-phenikaa-primary");
-            activeBtn.classList.remove("text-gray-500");
+            activeBtn.classList.remove("text-slate-500");
         }
 
         function filterContent() {
@@ -582,8 +698,18 @@
             var searchableItems = document.getElementsByClassName('searchable-item');
             
             if (filter === "") {
+                // If search is cleared, reset to default view (only show active tab)
                 var activeBtn = document.querySelector(".tab-btn.tab-active");
-                if(activeBtn) openTab(activeBtn.id.replace("btn-", "tab-"));
+                if(activeBtn) {
+                    var activeTabId = activeBtn.id.replace("btn-", "tab-");
+                    // Hide all first
+                    var contents = document.getElementsByClassName("tab-content");
+                    for (var i = 0; i < contents.length; i++) {
+                        contents[i].style.display = "none";
+                    }
+                    // Show active
+                    document.getElementById(activeTabId).style.display = "block";
+                }
                 return;
             }
 
@@ -597,8 +723,10 @@
                 var text = searchableItems[i].textContent || searchableItems[i].innerText;
                 if (text.toUpperCase().indexOf(filter) > -1) {
                     searchableItems[i].style.display = "";
+                    searchableItems[i].classList.add("animate-fade-in");
                 } else {
                     searchableItems[i].style.display = "none";
+                    searchableItems[i].classList.remove("animate-fade-in");
                 }
             }
         }
