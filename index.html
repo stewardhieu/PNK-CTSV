@@ -136,7 +136,7 @@
                 <span class="text-[10px] font-bold uppercase tracking-wider text-red-600 bg-red-50 px-2 py-1 rounded mb-2 inline-block">Giới hạn đỏ</span>
                 <div class="text-slate-500 text-xs font-semibold uppercase mt-1">Buộc Thôi Học</div>
                 <div class="text-3xl font-bold text-red-600 mt-1">02 <span class="text-sm font-normal text-slate-400">Lần</span></div>
-                <div class="text-xs text-slate-400 mt-2 flex items-center"><i class="fas fa-ban mr-1"></i> Cảnh báo liên tiếp</div>
+                <div class="text-xs text-slate-400 mt-2 flex items-center"><i class="fas fa-user-times mr-1"></i> Cảnh báo liên tiếp</div>
                 <i class="fas fa-user-times absolute bottom-3 right-3 text-red-100 text-4xl group-hover:text-red-200 transition-colors"></i>
             </div>
         </div>
@@ -317,68 +317,66 @@
                 <div class="flex justify-between items-center border-b border-red-100 pb-3 mb-4">
                     <h2 class="font-bold text-base text-red-600 flex items-center">
                         <span class="bg-red-100 text-red-600 w-8 h-8 rounded-full flex items-center justify-center mr-3"><i class="fas fa-balance-scale"></i></span>
-                        Khung Kỷ luật Trọng yếu 
+                        Khung Kỷ luật Trọng yếu (Trích Phụ lục QĐ 112)
                     </h2>
-                    <button class="source-tag bg-red-50 text-red-600 border-red-100 hover:bg-red-600" onclick="showRegulation('112_PL')"><i class="fas fa-search mr-1"></i>Phụ lục QĐ 112</button>
+                    <button class="source-tag bg-red-50 text-red-600 border-red-100 hover:bg-red-600" onclick="showRegulation('112_PL')"><i class="fas fa-search mr-1"></i>Xem Phụ lục đầy đủ</button>
                 </div>
-                <div class="overflow-x-auto rounded-lg border border-slate-200">
-                    <table class="w-full text-xs text-left">
-                        <thead class="bg-slate-100 font-bold text-slate-700 uppercase tracking-wide">
-                            <tr>
-                                <th class="p-3">Hành vi vi phạm</th>
-                                <th class="p-3 w-1/5">Lần 1</th>
-                                <th class="p-3 w-1/5">Lần 2 / Tái phạm</th>
-                                <th class="p-3 w-1/5">Lần 3</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-100">
-                            <!-- Thi cử -->
-                            <tr class="bg-red-50 hover:bg-red-100 transition-colors">
-                                <td class="p-3 font-semibold text-red-800"><i class="fas fa-user-edit mr-2 opacity-70"></i>Thi hộ / Nhờ thi hộ / Làm hộ đồ án</td>
-                                <td class="p-3 text-red-600 font-bold">Đình chỉ học 01 năm</td>
-                                <td class="p-3"><span class="bg-red-600 text-white px-2 py-1 rounded font-bold text-[10px] uppercase">Buộc thôi học</span></td>
-                                <td class="p-3 text-center text-slate-400">-</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="p-3 font-medium text-slate-700">Học hộ / Nhờ học hộ</td>
-                                <td class="p-3">Khiển trách toàn trường</td>
-                                <td class="p-3">Cảnh cáo</td>
-                                <td class="p-3 font-bold text-red-600">Đình chỉ 1 năm</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="p-3 font-medium text-slate-700">Mang tài liệu vào phòng thi (dù chưa dùng)</td>
-                                <td class="p-3 text-orange-600 font-bold">Đình chỉ thi (0 điểm)</td>
-                                <td class="p-3">Cảnh cáo toàn trường</td>
-                                <td class="p-3 font-bold text-red-600">Đình chỉ 1 năm</td>
-                            </tr>
-                            
-                            <!-- Tệ nạn -->
-                            <tr class="bg-red-50 hover:bg-red-100 transition-colors">
-                                <td class="p-3 font-semibold text-red-800"><i class="fas fa-gavel mr-2 opacity-70"></i>Đánh bạc, Cá độ, Ma túy, Mại dâm</td>
-                                <td class="p-3" colspan="3"><span class="bg-red-600 text-white px-2 py-1 rounded font-bold text-[10px] uppercase block w-fit">Buộc thôi học + Chuyển sang cơ quan chức năng</span></td>
-                            </tr>
-                            
-                            <!-- Hành vi khác -->
-                             <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="p-3 font-medium text-slate-700">Uống rượu bia, say rượu đến lớp</td>
-                                <td class="p-3">Khiển trách</td>
-                                <td class="p-3">Cảnh cáo</td>
-                                <td class="p-3 font-bold text-red-600">Đình chỉ 1 năm</td>
-                            </tr>
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="p-3 font-medium text-slate-700">Nghỉ học không phép (liên tục)</td>
-                                <td class="p-3">3-6 ngày: Khiển trách</td>
-                                <td class="p-3">> 1 tuần: Cảnh cáo</td>
-                                <td class="p-3 font-bold text-red-600">> 4 tuần: Buộc thôi học</td>
-                            </tr>
-                             <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="p-3 font-medium text-slate-700">Đăng tải thông tin sai lệch lên MXH</td>
-                                <td class="p-3">Khiển trách</td>
-                                <td class="p-3">Cảnh cáo</td>
-                                <td class="p-3 font-bold text-red-600">Đình chỉ có thời hạn</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                
+                <div class="p-4 bg-red-50 rounded-lg border border-red-100">
+                    <div class="flex items-start mb-4">
+                        <i class="fas fa-exclamation-circle text-red-500 mt-1 mr-2 flex-shrink-0"></i>
+                        <p class="text-xs text-slate-700 italic">
+                            <strong>Lưu ý quan trọng:</strong> Dưới đây là danh sách các hành vi vi phạm kỷ luật thường gặp. Hình thức xử lý (Khiển trách, Cảnh cáo, Đình chỉ, Buộc thôi học) sẽ phụ thuộc vào tính chất, mức độ và số lần vi phạm (Lần 1, 2, 3...) được quy định chi tiết trong văn bản gốc. Sinh viên vui lòng bấm nút "Xem Phụ lục đầy đủ" ở trên để tra cứu chính xác.
+                        </p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
+                        <!-- Cột 1 -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-phenikaa-primary text-sm uppercase border-b border-blue-200 pb-2">1. Học tập & Thi cử</h4>
+                            <ul class="space-y-2 text-xs text-slate-700 list-disc pl-4 marker:text-blue-400">
+                                <li>Thi hộ, kiểm tra hộ; nhờ người thi hộ, kiểm tra hộ.</li>
+                                <li>Làm hộ hoặc nhờ làm hộ tiểu luận, đồ án, khóa luận tốt nghiệp.</li>
+                                <li>Tổ chức học hộ, thi hộ, kiểm tra hộ.</li>
+                                <li>Học hộ hoặc nhờ người khác học hộ.</li>
+                                <li>Sao chép tiểu luận, đồ án, khóa luận tốt nghiệp.</li>
+                                <li>Vi phạm quy chế thi, kiểm tra.</li>
+                            </ul>
+                        </div>
+                        
+                        <!-- Cột 2 -->
+                        <div class="space-y-4">
+                            <h4 class="font-bold text-red-600 text-sm uppercase border-b border-red-200 pb-2">2. Tệ nạn & Pháp luật</h4>
+                            <ul class="space-y-2 text-xs text-slate-700 list-disc pl-4 marker:text-red-400">
+                                <li>Buôn bán, vận chuyển, tàng trữ, lôi kéo người khác sử dụng ma túy.</li>
+                                <li>Sử dụng ma túy.</li>
+                                <li>Đánh bạc, tổ chức đánh bạc dưới mọi hình thức.</li>
+                                <li>Chứa chấp, môi giới mại dâm; Hoạt động mại dâm.</li>
+                                <li>Tàng trữ, lưu hành văn hóa phẩm đồi trụy.</li>
+                                <li>Tham gia các hoạt động mê tín dị đoan, tôn giáo trái phép.</li>
+                                <li>Tàng trữ, sử dụng vũ khí, chất nổ, hàng cấm.</li>
+                            </ul>
+                        </div>
+
+                        <!-- Cột 3 (Full width) -->
+                        <div class="space-y-4 md:col-span-2">
+                            <h4 class="font-bold text-slate-600 text-sm uppercase border-b border-slate-200 pb-2">3. Ý thức & Kỷ luật chung</h4>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+                                <ul class="space-y-2 text-xs text-slate-700 list-disc pl-4 marker:text-slate-400">
+                                    <li>Uống rượu, bia trong giờ học; say rượu, bia khi đến lớp.</li>
+                                    <li>Hút thuốc lá tại nơi có quy định cấm.</li>
+                                    <li>Nghỉ học không phép liên tục.</li>
+                                    <li>Đến muộn, bỏ giờ, làm việc riêng trong giờ học.</li>
+                                </ul>
+                                <ul class="space-y-2 text-xs text-slate-700 list-disc pl-4 marker:text-slate-400">
+                                    <li>Đăng tải thông tin sai lệch, xuyên tạc, vu khống trên mạng Internet.</li>
+                                    <li>Gây gổ, đánh nhau, tổ chức đánh nhau.</li>
+                                    <li>Lấy cắp tài sản, chứa chấp tiêu thụ tài sản do lấy cắp mà có.</li>
+                                    <li>Không đóng học phí, bảo hiểm y tế đúng hạn.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
              
